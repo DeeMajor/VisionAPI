@@ -1,0 +1,143 @@
+﻿    @{
+        ViewBag.Title = "VisionAPI Home Page";
+        Layout = null;
+        VisionAPIDbContext db = new VisionAPIDbContext();
+        var images = db.Images.ToList();
+    }
+
+    @using VisionAPI.Models
+    <!DOCTYPE HTML>
+    <html>
+    <head>
+        <title>The CREATORS</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+        <script src="~/Content/FrontPage/js/jquery.min.js"></script>
+        <script src="~/Content/FrontPage/js/jquery.dropotron.min.js"></script>
+        <script src="~/Content/FrontPage/js/skel.min.js"></script>
+        <script src="~/Content/FrontPage/js/skel-layers.min.js"></script>
+        <script src="~/Content/FrontPage/js/init.js"></script>
+
+        <link rel="stylesheet" href="~/Content/FrontPage/css/skel.css" />
+        <link rel="stylesheet" href="~/Content/FrontPage/css/style.css" />
+        <link rel="stylesheet" href="~/Content/FrontPage/css/style-wide.css" />
+
+        <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+    </head>
+    <body>
+
+        <!-- Wrapper -->
+        <div class="wrapper style1">
+
+            <!-- Header -->
+            <div id="header" class="skel-panels-fixed">
+                <div id="logo">
+                    <h1><a href="index.html">The Creators</a></h1>
+                    <span class="tag">AI PROJECT</span>
+                </div>
+
+            </div>
+
+            <!-- Banner -->
+            <div id="banner" class="container">
+                <section>
+                    <p>Welcome to the Creators Computer vision AI Web Application. Upload an Image and the AI will describe the image content. The images are stored in Blob storages in Azure. After you are done you can also delete the images</p>
+                    @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <input type="file" name="file" id="upload" style="display: none" onchange="$('#submit').click();" />
+                        <input type="button" value="Upload a Photo" class="button medium" onclick="$('#upload').click();" />
+                        <input type="submit" id="submit" style="display: none" />
+                    }
+                </section>
+            </div>
+
+            <!-- Extra -->
+            <div id="extra">
+                <div class="container">
+                    <div class="row no-collapse-1">
+                        @foreach (BlobInfo blob in ViewBag.Blobs)
+                        {
+                            <section class="4u">
+                                <a href="@blob.ImageUri" class="image featured rel=" lightbox" title="@blob.Description">
+
+                                    <img src="@blob.ThumbnailUri" width="192" height="" alt="Blob Image">
+                                </a>
+                                <div class="box">
+
+                                    <h3><b>Category: </b><span>@blob.Category</span></h3>
+                                    <h3><b>Adult Content: </b><span> @blob.AdultContent</span></h3>
+                                    <p><b>Description: </b><span> @blob.Description</span></p>
+                                    <h5><i>Tags: </i><span> @blob.Tags</span></h5>
+                                    @{ 
+                                        int Imageid = images.Where(x => x.ImageUrl == blob.ImageUri).Select(x => x.ImageId).FirstOrDefault();
+                                    }
+                                    <a href="@Url.Action("Delete", "Home", new {id = Imageid})" class="button">Delete</a>
+                                </div>
+                            </section>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main -->
+
+
+        </div>
+
+        <!-- Footer -->
+        <!-- Copyright -->
+        <div id="copyright">
+            <div class="container">
+                <div class="copyright">
+                    <p>Design: <a href="http://templated.co">TEMPLATED</a> Images: <a href="http://unsplash.com">Unsplash</a> (<a href="http://unsplash.com/cc0">CC0</a>)</p>
+                    <ul class="icons">
+                        <li><a href="#" class="fa fa-facebook"><span>Facebook</span></a></li>
+                        <li><a href="#" class="fa fa-twitter"><span>Twitter</span></a></li>
+                        <li><a href="#" class="fa fa-google-plus"><span>Google+</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
+
+@*<div class="container" style="padding-top: 24px">
+        <div class="row">
+            <div class="col-sm-8">
+                @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input type="file" name="file" id="upload" style="display: none" onchange="$('#submit').click();" />
+                    <input type="button" value="Upload a Photo" class="btn btn-primary btn-lg" onclick="$('#upload').click();" />
+                    <input type="submit" id="submit" style="display: none" />
+                }
+            </div>
+            <div class="col-sm-4 pull-right">
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-sm-12">
+                @foreach (BlobInfo blob in ViewBag.Blobs)
+                {
+                    <a href="@blob.ImageUri" rel="lightbox" title="@blob.Description">
+                        <img src="@blob.ThumbnailUri" width="192" title="@blob.Description" style="padding-right: 16px; padding-bottom: 16px" />
+                    </a>
+                }
+            </div>
+        </div>
+    </div>*@
+
+@section scripts
+{
+    <script type="text/javascript" language="javascript">
+        if ("@TempData["Message"]" !== "") {
+            alert("@TempData["Message"]");
+        }
+    </script>
+}
+@Scripts.Render("~/bundles/lightbox")
