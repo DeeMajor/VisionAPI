@@ -60,9 +60,9 @@
                         @foreach (BlobInfo blob in ViewBag.Blobs)
                         {
                             <section class="4u">
-                                <a href="@blob.ImageUri" class="image featured rel=" lightbox" title="@blob.Description">
+                                <a href="@blob.ImageUri" class="image featured" rel=" lightbox" title="@blob.Description">
 
-                                    <img src="@blob.ThumbnailUri" width="192" height="" alt="Blob Image">
+                                    <img src="@blob.ThumbnailUri" width="192" alt="Blob Image">
                                 </a>
                                 <div class="box">
 
